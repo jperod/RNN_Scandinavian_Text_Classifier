@@ -31,7 +31,7 @@ def evaluate(line_tensor):
     return output
 """ remover daqui!!!!!!"""
 
-save_dir = "saves/save_hn_"+str(config["n_hidden"])+"_lr_"+str(config["learning_rate"])
+save_dir = "saves/backup_save_hn_256_lr_0.005"
 vocab_dir = save_dir + "/vocab.txt"
 # saved_model_dir = save_dir + "/saved_model.pth"
 saved_model_dir = "saves/backup_save_hn_256_lr_0.005/saved_model.pth"
