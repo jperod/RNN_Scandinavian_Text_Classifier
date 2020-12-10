@@ -39,8 +39,10 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## REST API
 
-REST API Response:
+### REST API Response:
+```
 {"class_id": 1, "class_name": "Danish"}
+```
 
 ### Break down into end to end tests
 
