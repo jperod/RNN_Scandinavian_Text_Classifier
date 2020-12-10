@@ -58,14 +58,15 @@ def predict(input_line, n_predictions=3):
         prediction = all_categories[pred_ix]
         print("The following sentence is: [" + prediction + "]")
 
+print('Testing on dataset sentences:')
 predict('Hold nu op, hun har det skidt') #DA
 predict('Jeg har akkurat bakt en sukkerkake') #NO
 predict('Man känner igen den, den är bekväm.') #SV
 
-#Test on random sentences from the internet:
+print('Testing on random sentences from the internet:')
 predict('Mit luftpudefartøj er fyldt med ål') #DA
+predict('Der er i øjeblikket ingen tekst på denne side. Du kan søge efter sidenavnet på andre sider, søge i relaterede logger eller oprette siden. ') #DA
 predict('Jeg forstår det veldig godt.') #NO
+predict('Med et areal på 165,25 millioner kvadratkilometer dekker Stillehavet nesten en tredjedel av jordens overflate') #NO
 predict('När katten är borta dansar råttorna på bordet') #SV
-
-
-print("end")
+predict('Rosshavet (engelska: Ross Sea) är ett randhav av Antarktiska oceanen och ligger mellan Victoria Land och Marie Byrd Land') #SV
