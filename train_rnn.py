@@ -16,14 +16,14 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 """ Configuration """
 config = {
-    "n_hidden": 256,
+    "n_hidden": 32,
     "learning_rate": 0.005, # If you set this too high, it might explode. If too low, it might not learn
     "n_iters": 100000,
     "print_every": 1000,
-    "data_size": 100000, # Number of sentences to extract. balanced amounts of Da, Sv and No sentences.
+    "data_size": 30000, # Number of sentences to extract. balanced amounts of Da, Sv and No sentences.
     "data_dir": "datasets/OpenSubs/*.txt",
     "lr_decay": 0.95,
-    "train_from_savedmodel": True,
+    "train_from_savedmodel": False,
     "saved_model_dir": "save_hn_256_lr_0.005"
 }
 
@@ -31,6 +31,11 @@ class Utils():
     def __init__(self):
         # super(Utils, self).__init__()
         self.n_words = None
+        self.all_categories = []
+        self.all_sentences = []
+        self.all_labels = []
+        self.Word2Index = None
+        self.n_categories = None
 
     def findFiles(self, data_dir):
         return glob.glob(data_dir)
@@ -62,24 +67,24 @@ class Utils():
     # Just for demonstration, turn a letter into a <1 x n_letters> Tensor
     def WordToTensor(self, word):
         tensor = torch.zeros(1, self.n_words)
-        tensor[0][WordToIndex(word)] = 1
+        tensor[0][self.WordToIndex(word)] = 1
         return tensor
 
     # or an array of one-hot letter vectors
     def SentToTensor(self, sent):
         # Remove punctuation in this tokenizer, words only
-        sent = tokenizer(sent)
+        sent = self.tokenizer(sent)
         sent = [word.lower() for word in sent]
         # sent = [word for word in sent if word in ]
         tensor = torch.zeros(len(sent), 1, self.n_words)
         for li, word in enumerate(sent):
-            tensor[li][0][WordToIndex(word)] = 1
+            tensor[li][0][self.WordToIndex(word)] = 1
         return tensor
 
     def categoryFromOutput(self, output):
         top_n, top_i = output.topk(1)
         category_i = top_i[0].item()
-        return all_categories[category_i], category_i
+        return self.all_categories[category_i], category_i
 
     def load_data(self, data_size, data_dir):
         self.data_size = data_size
@@ -87,36 +92,36 @@ class Utils():
         files = self.findFiles(data_dir=data_dir)
         # Build the category_lines dictionary, a list of names per language
         category_lines = {}
-        all_categories = []
-        all_sentences = []
-        all_labels = []
+
         for filename in files:
             category = os.path.basename(filename)[3:5]
-            all_categories.append(category)
+            self.all_categories.append(category)
             sentences = self.readLines(filename, int(data_size / 3))
             category_lines[category] = sentences
-            all_sentences.extend(sentences)
-            all_labels.extend([category for i in range(len(sentences))])
+            self.all_sentences.extend(sentences)
+            self.all_labels.extend([category for i in range(len(sentences))])
 
-        df = pd.DataFrame([all_sentences, all_labels]).T
+        df = pd.DataFrame([self.all_sentences, self.all_labels]).T
 
-        df_train, df_val = train_test_split(df, shuffle=True, test_size=min(0.15, 10000 / len(all_sentences)))
+        df_train, df_val = train_test_split(df, shuffle=True, test_size=min(0.15, 10000 / len(self.all_sentences)))
 
         # Max val size of 10000. Don't need more really for validation purposes
         print("Sentences used for training: " + str(df_train.shape[0]))
         print("Sentences used for validation: " + str(df_val.shape[0]))
         print(df_val.shape)
 
-        vectorizer = CountVectorizer(tokenizer=tokenizer)
-        vectorizer.fit_transform(all_sentences)
-        Word2Index = vectorizer.vocabulary_
-        self.n_words = len(Word2Index)
-        n_categories = len(all_categories)
+        vectorizer = CountVectorizer(tokenizer=self.tokenizer)
+        vectorizer.fit_transform(self.all_sentences)
+        self.Word2Index = vectorizer.vocabulary_
+        self.n_words = len(self.Word2Index)
+        self.n_categories = len(self.all_categories)
 
-        print(WordToTensor('stora').size())
+        print(self.WordToTensor('stora').size())
 
-        print(SentToTensor('jeg vil vite hva, som skjer med deg.').size())
+        print(self.SentToTensor('jeg vil vite hva, som skjer med deg.').size())
 
+        print("done")
+        return self.n_words, self.n_categories, self.Word2Index, df_train, df_val
 
     def randomChoice(self, l):
         return l[random.randint(0, len(l) - 1)]
@@ -125,8 +130,8 @@ class Utils():
         sample = df.sample()
         category = sample[1].values[0]
         sent = sample[0].values[0]
-        category_tensor = torch.tensor([all_categories.index(category)], dtype=torch.long)
-        line_tensor = SentToTensor(sent)
+        category_tensor = torch.tensor([self.all_categories.index(category)], dtype=torch.long)
+        line_tensor = self.SentToTensor(sent)
         return category, sent, category_tensor, line_tensor
 
     def timeSince(self, since):
@@ -136,15 +141,15 @@ class Utils():
         s -= m * 60
         return '%dm %ds' % (m, s)
 
-    def evaluate(self, line_tensor):
+    def evaluate(self, line_tensor, rnn):
         hidden = rnn.initHidden()
 
         for i in range(line_tensor.size()[0]):
             output, hidden = rnn(line_tensor[i], hidden)
 
-        return output
+        return output, rnn
 
-    def train(self, category_tensor, line_tensor, iter):
+    def train(self, category_tensor, line_tensor, iter, rnn):
         hidden = rnn.initHidden()
 
         rnn.zero_grad()
@@ -162,7 +167,7 @@ class Utils():
         for p in rnn.parameters():
             p.data.add_(p.grad.data, alpha=-lr)
 
-        return output, loss.item()
+        return output, rnn
 
 
     def tokenizer(self, sent):
@@ -192,43 +197,18 @@ class RNN(nn.Module):
 def main():
     start = time.time()
     U = Utils()
-    n_words, n_categories = U.load_data(data_size = config["data_size"], data_dir = config["data_dir"])
 
-
+    n_words, n_categories, Word2Index, df_train, df_val = U.load_data(data_size = config["data_size"], data_dir = config["data_dir"])
 
     rnn = RNN(n_words, config["n_hidden"], n_categories)
-
     if config["train_from_savedmodel"]:
         save_dir = "saves/save_hn_" + str(config["n_hidden"]) + "_lr_" + str(config["learning_rate"])
         saved_model_dir = save_dir + "/saved_model.pth"
         rnn.load_state_dict(torch.load(saved_model_dir))
 
-
-    #Sample output of model
-    input = Utils.SentToTensor('Hans namn var Mormon')
-    hidden = torch.zeros(1, config["n_hidden"])
-    output, next_hidden = rnn(input[0], hidden)
-
-    print(Utils.categoryFromOutput(output))
-
-
-
-    for i in range(10):
-        category, sent, category_tensor, line_tensor = Utils.randomTrainingExample(df_val)
-        print('category =', category, '/ sentence =', sent)
-
-
-
-
-
-
-
-    train_scores_right = [] #Right, wrong
-    train_scores_wrong = []
-    val_scores_right = [] #Right, wrong
-    val_scores_wrong = []
+    #Initialize empty lists to record training moving average (5000) accuracy on training and validation datasets
+    train_scores_right, train_scores_wrong, val_scores_right, val_scores_wrong = [], [], [], []
     best_acc_val = 0
-
     if not config["train_from_savedmodel"]:
         try:
             os.makedirs("saves/save_hn_"+str(config["n_hidden"])+"_lr_"+str(config["learning_rate"]))
@@ -238,9 +218,9 @@ def main():
             pickle.dump(Word2Index, f)
 
     for iter in range( config["n_iters"]):
-        category, line, category_tensor, line_tensor = Utils.randomTrainingExample(df_train)
-        output, loss = Utils.train(category_tensor, line_tensor, iter)
-        guess, _ = Utils.categoryFromOutput(output)
+        category, line, category_tensor, line_tensor = U.randomTrainingExample(df_train)
+        output, rnn = U.train(category_tensor, line_tensor, iter)
+        guess, _ = U.categoryFromOutput(output)
         if guess == category:
             train_scores_right.append(1)
             train_scores_wrong.append(0)
@@ -249,9 +229,9 @@ def main():
             train_scores_right.append(0)
         acc_train = round(100*sum(train_scores_right)/(sum(train_scores_right)+sum(train_scores_wrong)),1)
 
-        category_val, _, category_tensor_val, line_tensor_val = Utils.randomTrainingExample(df_val)
-        output_val = Utils.evaluate(line_tensor_val)
-        guess_val, _ = Utils.categoryFromOutput(output_val)
+        category_val, _, category_tensor_val, line_tensor_val = U.randomTrainingExample(df_val)
+        output_val, rnn = U.evaluate(line_tensor_val, rnn)
+        guess_val, _ = U.categoryFromOutput(output_val)
         if guess_val == category_val:
             val_scores_right.append(1)
             val_scores_wrong.append(0)
@@ -260,29 +240,22 @@ def main():
             val_scores_wrong.append(1)
         acc_val = round(100*sum(val_scores_right)/(sum(val_scores_right)+sum(val_scores_wrong)),1)
 
-        # Print iter number, loss, name and guess
+        # Print details and show the example of a training prediction
         if iter % config["print_every"] == 0 and iter >= 100:
             correct = '✓' if guess == category else '✗ (%s)' % category
-
-            print('%d %d%% (%s) | %s / %s %s' % (iter, iter / config["n_iters"] * 100, Utils.timeSince(start), line, guess, correct))
+            print('%d %d%% (%s) | %s / %s %s' % (iter, iter / config["n_iters"] * 100, U.timeSince(start), line, guess, correct))
             print('Train Accuracy: ' + str(acc_train) + '% | Validation Accuracy: ' + str(acc_val) + '%')
 
-        # Save model parameters for best model, min accuracy of 65%
+        # Save model parameters for best model, min val accuracy of 65% allowed before starting saves
         if iter > 5000 and (acc_val > best_acc_val) and acc_val > 65:
             #Only start saving after 66+ validation accuracy
             best_acc_val = acc_val
             torch.save(rnn.state_dict(), "saves/save_hn_"+str(config["n_hidden"])+"_lr_"+str(config["learning_rate"])+"/saved_model.pth")
             print("New Best Model with validation accuracy = "+str(best_acc_val)+"! Saving model parameters...")
-
         train_scores_right = train_scores_right[-5000:]
         train_scores_wrong = train_scores_wrong[-5000:]
         val_scores_right = val_scores_right[-5000:]
         val_scores_wrong = val_scores_wrong[-5000:]
-
-
-
-    print("end")
-
 
 if __name__ == '__main__':
     main()
