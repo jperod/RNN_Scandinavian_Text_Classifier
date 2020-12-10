@@ -23,7 +23,7 @@ config = {
     "data_size": 30000, # Number of sentences to extract. balanced amounts of Da, Sv and No sentences.
     "data_dir": "datasets/OpenSubs/*.txt",
     "lr_decay": 0.95,
-    "train_from_savedmodel": False,
+    "train_from_savedmodel": False, #If model was saved, it can be loaded to continue training from checkpoint
     "saved_model_dir": "save_hn_256_lr_0.005"
 }
 
@@ -219,7 +219,7 @@ def main():
 
     for iter in range( config["n_iters"]):
         category, line, category_tensor, line_tensor = U.randomTrainingExample(df_train)
-        output, rnn = U.train(category_tensor, line_tensor, iter)
+        output, rnn = U.train(category_tensor, line_tensor, iter, rnn)
         guess, _ = U.categoryFromOutput(output)
         if guess == category:
             train_scores_right.append(1)
