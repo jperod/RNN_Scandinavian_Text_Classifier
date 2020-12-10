@@ -58,12 +58,12 @@ def predict(input_line, n_predictions=3):
         prediction = all_categories[pred_ix]
         print("The following sentence is: [" + prediction + "]")
 
-print('Testing on dataset sentences:')
+print('\nTesting on dataset sentences:')
 predict('Hold nu op, hun har det skidt') #DA
 predict('Jeg har akkurat bakt en sukkerkake') #NO
 predict('Man känner igen den, den är bekväm.') #SV
 
-print('Testing on random sentences from the internet:')
+print('\nTesting on random sentences from the internet:')
 predict('Mit luftpudefartøj er fyldt med ål') #DA
 predict('Der er i øjeblikket ingen tekst på denne side. Du kan søge efter sidenavnet på andre sider, søge i relaterede logger eller oprette siden. ') #DA
 predict('Jeg forstår det veldig godt.') #NO
