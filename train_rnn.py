@@ -1,0 +1,284 @@
+from __future__ import unicode_literals, print_function, division
+from io import open
+import glob
+import os
+from nltk.tokenize import RegexpTokenizer
+rTokenizer = RegexpTokenizer(r'\w+')
+from sklearn.model_selection import train_test_split
+import pandas as pd
+import pickle
+import time
+import math
+import torch.nn as nn
+import torch
+import random
+from sklearn.feature_extraction.text import CountVectorizer
+
+""" Configuration """
+config = {
+    "n_hidden": 256,
+    "learning_rate": 0.005, # If you set this too high, it might explode. If too low, it might not learn
+    "n_iters": 100000,
+    "print_every": 1000,
+    "data_size": 100000, # Number of sentences to extract. balanced amounts of Da, Sv and No sentences.
+    "data_dir": "datasets/OpenSubs/*.txt",
+    "lr_decay": 0.95,
+    "train_from_savedmodel": True,
+    "saved_model_dir": "save_hn_256_lr_0.005"
+}
+
+
+def tokenizer(sent):
+    tokens = rTokenizer.tokenize(sent)
+    tokens = [token.lower() for token in tokens]
+    return tokens
+
+class RNN(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(RNN, self).__init__()
+
+        self.hidden_size = hidden_size
+        self.i2h = nn.Linear(input_size + hidden_size, hidden_size)
+        self.i2o = nn.Linear(input_size + hidden_size, output_size)
+        self.softmax = nn.LogSoftmax(dim=1)
+
+    def forward(self, input, hidden):
+        combined = torch.cat((input, hidden), 1)
+        hidden = self.i2h(combined)
+        output = self.i2o(combined)
+        output = self.softmax(output)
+        return output, hidden
+
+    def initHidden(self):
+        return torch.zeros(1, self.hidden_size)
+def main():
+
+    def findFiles(path):
+        return glob.glob(path)
+    # Read a file and split into lines
+    def readLines(filename, lim):
+        f = open(filename, "r", encoding='utf-8')
+        c = 0
+        sentences = []
+        while True:
+            # read line
+            line = f.readline().rstrip()
+            if len(line) > 15 & len(line) < 100:
+                sentences.append(line)
+                c += 1
+            # if not line:
+            if c == lim:
+                break
+        f.close()
+        return sentences
+
+    # Find letter index from all_letters, e.g. "a" = 0
+    def WordToIndex(word):
+
+        index = Word2Index[word.lower()]
+        return index
+
+    # Just for demonstration, turn a letter into a <1 x n_letters> Tensor
+    def WordToTensor(word):
+        tensor = torch.zeros(1, n_words)
+        tensor[0][WordToIndex(word)] = 1
+        return tensor
+
+    # or an array of one-hot letter vectors
+    def SentToTensor(sent):
+        # Remove punctuation in this tokenizer, words only
+        sent = tokenizer(sent)
+        sent = [word.lower() for word in sent]
+        # sent = [word for word in sent if word in ]
+        tensor = torch.zeros(len(sent), 1, n_words)
+        for li, word in enumerate(sent):
+            tensor[li][0][WordToIndex(word)] = 1
+        return tensor
+
+    def categoryFromOutput(output):
+        top_n, top_i = output.topk(1)
+        category_i = top_i[0].item()
+        return all_categories[category_i], category_i
+
+    def randomChoice(l):
+        return l[random.randint(0, len(l) - 1)]
+
+    def randomTrainingExample(df):
+        sample = df.sample()
+        category = sample[1].values[0]
+        sent = sample[0].values[0]
+        category_tensor = torch.tensor([all_categories.index(category)], dtype=torch.long)
+        line_tensor = SentToTensor(sent)
+        return category, sent, category_tensor, line_tensor
+
+    def timeSince(since):
+        now = time.time()
+        s = now - since
+        m = math.floor(s / 60)
+        s -= m * 60
+        return '%dm %ds' % (m, s)
+
+    start = time.time()
+
+    def evaluate(line_tensor):
+        hidden = rnn.initHidden()
+
+        for i in range(line_tensor.size()[0]):
+            output, hidden = rnn(line_tensor[i], hidden)
+
+        return output
+
+    def train(category_tensor, line_tensor, iter):
+        hidden = rnn.initHidden()
+
+        rnn.zero_grad()
+
+        for i in range(line_tensor.size()[0]):
+            output, hidden = rnn(line_tensor[i], hidden)
+        criterion = nn.NLLLoss()
+        loss = criterion(output, category_tensor)
+        loss.backward()
+
+        # Add parameters' gradients to their values, multiplied by learning rate with exponential decay
+        # reduce 0.8 every 10k steps
+        lr = config["learning_rate"]*pow(config["lr_decay"],(iter/10000))
+
+        for p in rnn.parameters():
+            p.data.add_(p.grad.data, alpha=-lr)
+
+        return output, loss.item()
+
+    files = findFiles(config["data_dir"])
+    # Build the category_lines dictionary, a list of names per language
+    category_lines = {}
+    all_categories = []
+    all_sentences = []
+    all_labels = []
+    for filename in files:
+        category = os.path.basename(filename)[3:5]
+        all_categories.append(category)
+        sentences = readLines(filename, int(config["data_size"]/3))
+        category_lines[category] = sentences
+        all_sentences.extend(sentences)
+        all_labels.extend([category for i in range(len(sentences))])
+
+    df = pd.DataFrame([all_sentences, all_labels]).T
+
+    df_train, df_val = train_test_split(df, shuffle=True, test_size=min(0.15, 10000/len(all_sentences)))
+
+
+    """   CREATE ONLY ON TRAIN """
+    #Create only on train set
+    # train_sentences = [for s in list(df_train)]
+    """    DGSDF """
+
+    #Max val size of 10000. Don't need more really for validation purposes
+    print("Sentences used for training: "+str(df_train.shape[0]))
+    print("Sentences used for validation: "+str(df_val.shape[0]))
+    print(df_val.shape)
+
+    vectorizer = CountVectorizer(tokenizer=tokenizer)
+    vectorizer.fit_transform(all_sentences)
+    Word2Index = vectorizer.vocabulary_
+    n_words = len(Word2Index)
+    n_categories = len(all_categories)
+
+
+    print(WordToTensor('stora').size())
+
+    print(SentToTensor('jeg vil vite hva, som skjer med deg.').size())
+
+
+
+
+
+    rnn = RNN(n_words, config["n_hidden"], n_categories)
+
+    if config["train_from_savedmodel"]:
+        save_dir = "saves/save_hn_" + str(config["n_hidden"]) + "_lr_" + str(config["learning_rate"])
+        saved_model_dir = save_dir + "/saved_model.pth"
+        rnn.load_state_dict(torch.load(saved_model_dir))
+
+
+    #Sample output of model
+    input = SentToTensor('Hans namn var Mormon')
+    hidden = torch.zeros(1, config["n_hidden"])
+    output, next_hidden = rnn(input[0], hidden)
+
+    print(categoryFromOutput(output))
+
+
+
+    for i in range(10):
+        category, sent, category_tensor, line_tensor = randomTrainingExample(df_val)
+        print('category =', category, '/ sentence =', sent)
+
+
+
+
+
+
+
+    train_scores_right = [] #Right, wrong
+    train_scores_wrong = []
+    val_scores_right = [] #Right, wrong
+    val_scores_wrong = []
+    best_acc_val = 0
+
+    if not config["train_from_savedmodel"]:
+        try:
+            os.makedirs("saves/save_hn_"+str(config["n_hidden"])+"_lr_"+str(config["learning_rate"]))
+        except OSError as e:
+            raise("Save directory: save_hn_XXX_lr_x.xxxx_already exists. delete it to start training from scratch")
+        with open("saves/save_hn_" + str(config["n_hidden"]) + "_lr_" + str(config["learning_rate"]) + "/vocab.txt", "wb") as f:
+            pickle.dump(Word2Index, f)
+
+    for iter in range( config["n_iters"]):
+        category, line, category_tensor, line_tensor = randomTrainingExample(df_train)
+        output, loss = train(category_tensor, line_tensor, iter)
+        guess, _ = categoryFromOutput(output)
+        if guess == category:
+            train_scores_right.append(1)
+            train_scores_wrong.append(0)
+        else:
+            train_scores_wrong.append(1)
+            train_scores_right.append(0)
+        acc_train = round(100*sum(train_scores_right)/(sum(train_scores_right)+sum(train_scores_wrong)),1)
+
+        category_val, _, category_tensor_val, line_tensor_val = randomTrainingExample(df_val)
+        output_val = evaluate(line_tensor_val)
+        guess_val, _ = categoryFromOutput(output_val)
+        if guess_val == category_val:
+            val_scores_right.append(1)
+            val_scores_wrong.append(0)
+        else:
+            val_scores_right.append(0)
+            val_scores_wrong.append(1)
+        acc_val = round(100*sum(val_scores_right)/(sum(val_scores_right)+sum(val_scores_wrong)),1)
+
+        # Print iter number, loss, name and guess
+        if iter % config["print_every"] == 0 and iter >= 100:
+            correct = '✓' if guess == category else '✗ (%s)' % category
+
+            print('%d %d%% (%s) | %s / %s %s' % (iter, iter / config["n_iters"] * 100, timeSince(start), line, guess, correct))
+            print('Train Accuracy: ' + str(acc_train) + '% | Validation Accuracy: ' + str(acc_val) + '%')
+
+        # Save model parameters for best model, min accuracy of 65%
+        if iter > 5000 and (acc_val > best_acc_val) and acc_val > 65:
+            #Only start saving after 66+ validation accuracy
+            best_acc_val = acc_val
+            torch.save(rnn.state_dict(), "saves/save_hn_"+str(config["n_hidden"])+"_lr_"+str(config["learning_rate"])+"/saved_model.pth")
+            print("New Best Model with validation accuracy = "+str(best_acc_val)+"! Saving model parameters...")
+
+        train_scores_right = train_scores_right[-5000:]
+        train_scores_wrong = train_scores_wrong[-5000:]
+        val_scores_right = val_scores_right[-5000:]
+        val_scores_wrong = val_scores_wrong[-5000:]
+
+
+
+    print("end")
+
+
+if __name__ == '__main__':
+    main()
