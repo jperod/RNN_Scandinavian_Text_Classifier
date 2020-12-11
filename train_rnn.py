@@ -200,7 +200,9 @@ def main():
 
     n_words, n_categories, Word2Index, df_train, df_val = U.load_data(data_size = config["data_size"], data_dir = config["data_dir"])
 
+    #Initialize RNN model:
     rnn = RNN(n_words, config["n_hidden"], n_categories)
+    #If training from checkpoint, load model state_dict here:
     if config["train_from_savedmodel"]:
         save_dir = "saves/save_hn_" + str(config["n_hidden"]) + "_lr_" + str(config["learning_rate"])
         saved_model_dir = save_dir + "/saved_model.pth"
