@@ -25,7 +25,7 @@ Each .zip file contains multiple files, make sure to extract only the file endin
 * From en-no.txt.zip extract only the file: OpenSubtitles.en-no.no
 * From en-sv.txt.zip extract only the file: OpenSubtitles.en-sv.sv
 
-The folder datasets/OpenSubs should contain these 3 files
+These 3 files should be extracted to the folder: datasets/OpenSubs.
 
 ### Installation
 
