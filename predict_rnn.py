@@ -23,10 +23,12 @@ rnn = RNN(len(Word2Index), config['n_hidden'], 3)
 rnn.load_state_dict(torch.load(saved_model_dir))
 all_categories = ['da', 'no', 'sv']
 
+U = Utils(n_words, all_categories, Word2Index_w_unk)
+
 def predict(input_line):
     print('\n> %s' % input_line)
     with torch.no_grad():
-        output = Utils().evaluate(Utils().SentToTensor(input_line, n_words))
+        output, _ = U.evaluate(U.SentToTensor(input_line), rnn)
         output = np.squeeze(output.numpy())
         pred_ix = np.argmax(output)
         prediction = all_categories[pred_ix]

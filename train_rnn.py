@@ -28,14 +28,14 @@ config = {
 }
 
 class Utils():
-    def __init__(self):
+    def __init__(self, n_words=None, all_categories=[], Word2Index=None):
         # super(Utils, self).__init__()
-        self.n_words = None
-        self.all_categories = []
+        self.n_words = n_words
+        self.all_categories = all_categories
         self.all_sentences = []
         self.all_labels = []
-        self.Word2Index = None
-        self.n_categories = None
+        self.Word2Index = Word2Index
+        self.n_categories = 3
 
     def findFiles(self, data_dir):
         return glob.glob(data_dir)
@@ -59,8 +59,10 @@ class Utils():
 
     # Find letter index from all_letters, e.g. "a" = 0
     def WordToIndex(self, word):
-
-        index = self.Word2Index[word.lower()]
+        try:
+            index = self.Word2Index[word.lower()]
+        except:
+            index = self.Word2Index['<UNK>']
         return index
 
 
@@ -195,8 +197,8 @@ class RNN(nn.Module):
 
 def main():
     start = time.time()
-    U = Utils()
 
+    U = Utils();
     n_words, n_categories, Word2Index, df_train, df_val = U.load_data(data_size = config["data_size"], data_dir = config["data_dir"])
 
     #Initialize RNN model:
