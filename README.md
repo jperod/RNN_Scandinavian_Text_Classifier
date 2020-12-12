@@ -95,7 +95,6 @@ Train Accuracy: 87.7% | Validation Accuracy: 88.2%
 Train Accuracy: 87.7% | Validation Accuracy: 88.1%
 920 0% (4m 36s) | -Det fins ingen miss Froy. / no ✓
 Train Accuracy: 87.7% | Validation Accuracy: 88.2%
-
 ```
 ### Using trained model to generate predictions
 
@@ -136,7 +135,7 @@ Output in json format:
 ```
 {"language":"sv"}
 ```
-## Future Work 
+# Future Work 
 
 * Implement learning rate decay to further prevent vanishing/exploding gradients
 * extract more scandivanian datasets and train on more sentences
