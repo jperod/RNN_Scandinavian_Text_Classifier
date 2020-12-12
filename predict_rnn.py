@@ -3,7 +3,7 @@ import pickle
 import torch
 import numpy as np
 import argparse
-
+""""""
 parser = argparse.ArgumentParser()
 parser.add_argument('--string', type=str, help='enter string to predict')
 parser.add_argument('--example', action='store_true', help='example of predictions made by the model')
