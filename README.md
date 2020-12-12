@@ -15,11 +15,17 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Extracting the compressed dataset
 
-
 The data has to be downloaded and extracted from the following links: 
-* os_da.txt (danish) - opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/da-en.txt.zip
-* os_no.txt (norwegian) - opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/en-no.txt.zip
-* os_sv.txt (swedish)- opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/en-sv.txt.zip
+* os_da.txt (danish) - http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/da-en.txt.zip
+* os_no.txt (norwegian) - http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/en-no.txt.zip
+* os_sv.txt (swedish)- http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/en-sv.txt.zip
+
+Each .zip file contains multiple files, make sure to extract only the file ending in the respective language:
+* From da-en.txt.zip extract only the file: OpenSubtitles.da-en.da
+* From en-no.txt.zip extract only the file: OpenSubtitles.en-no.no
+* From en-sv.txt.zip extract only the file: OpenSubtitles.en-sv.sv
+
+The folder datasets/OpenSubs should contain these 3 files
 
 ### Installation
 
@@ -75,7 +81,10 @@ python train_rnn.py --nh 128 --lr 0.001 --e 2 --ckp --ckp_dir 'save_hn_128_lr_0.
 
 Example of the output during training:
 ```
-FALTA METER ISTO
+XXXXX X% (35m 48s) | Står du der, jenta mi? / da ✗ (no)
+Train Accuracy: 55.1% | Validation Accuracy: 54.9%
+
+
 ```
 ### Using trained model to generate predictions
 
