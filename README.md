@@ -10,7 +10,7 @@ Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegi
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ### Extracting the data
 
@@ -20,24 +20,31 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing the environment
 
-* Clone this repository
+* 1. Clone this repository
 ```
 git clone https://github.com/jperod/RNN_Scandinavian_Text_Classifier.git
 ```
-* install virtualenv 
+* 2. install virtualenv 
 ```
 pip install virtualenv
 ```
-* Create a python virtualenv
+* 3. Create a python virtualenv
 ```
 virtualenv venv
 ```
-* Activate virtual environment
-  ** Windows
+* 4.i (Windows) Activate virtual environment
 ```
 cd venv\Scripts
 activate
 cd ..\..
+```
+* 4.ii (Linux / Mac) Activate virtual environment
+```
+source venv/bin/activate
+```
+* 5 Install required libraries
+```
+pip install -r requirements.txt
 ```
 
 ### Training the model
