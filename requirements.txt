@@ -4,3 +4,4 @@ torch~=1.7.1
 nltk~=3.5
 scikit-learn~=0.23.2
 numpy~=1.17.0
+requests~=2.25.0

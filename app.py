@@ -38,9 +38,8 @@ def predict_sentence(input_line):
 def predict():
     if request.method == 'POST':
         # we will get the file from the request
-        file = request.files['file']
-        # convert that to bytes
-        sentence = file.read()
+        sentence = request.files['sentence']
+        # Predict language class
         sentence, language = predict_sentence(sentence)
         return jsonify({'sentence': sentence, 'language': language})
 
