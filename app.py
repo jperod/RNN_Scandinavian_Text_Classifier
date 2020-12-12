@@ -29,12 +29,19 @@ def predict_sentence(input_line):
         pred_ix = np.argmax(output)
         prediction = all_categories[pred_ix]
         print("The following sentence is: [" + prediction + "]")
-    return input_line, prediction
+    return prediction
+@app.route('/')
+def index():
+    return 'Hi! to classify a sentence write in http://0.0.0.0:5000/predict/sentence to predict'
+
+@app.route('/predict')
+def pred_message():
+    return 'Hi! to classify a sentence write in http://0.0.0.0:5000/predict/sentence to predict'
 
 @app.route('/predict/<string:sentence>')
 def predict(sentence):
     # Predict language class
-    sentence, language = predict_sentence(sentence)
+    language = predict_sentence(sentence)
     return jsonify({'language': language})
 
 if __name__ == '__main__':
