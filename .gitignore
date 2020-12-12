@@ -2,3 +2,9 @@ datasets/OpenSubs/OpenSubtitles.da-en.da
 datasets/OpenSubs/OpenSubtitles.en-no.no
 datasets/OpenSubs/OpenSubtitles.en-sv.sv
 test_app.py
+/datasets/OpenSubs/OpenSubtitles.da-en.da
+/datasets/OpenSubs/OpenSubtitles.en-no.no
+/datasets/OpenSubs/OpenSubtitles.en-sv.sv
+/datasets/OpenSubs/os_da.txt
+/datasets/OpenSubs/os_no.txt
+/datasets/OpenSubs/os_sv.txt
