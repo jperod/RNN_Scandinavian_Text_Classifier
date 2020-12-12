@@ -10,8 +10,6 @@ RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
 
-COPY './train_rnn.py' .
-COPY './predict_rnn.py' .
-COPY './saves' .
+COPY . .
 
 CMD ["python", "app.py"]

@@ -1,12 +1,9 @@
-from flask import Flask, jsonify, request
-import io
-import json
+from flask import Flask, jsonify
 from train_rnn import config, RNN, Utils
 import pickle
 import torch
 import numpy as np
-import argparse
-
+import os
 app = Flask(__name__)
 vocab_dir = 'saves/save_hn_256_lr_0.005/vocab.txt'
 saved_model_dir = 'saves/save_hn_256_lr_0.005/saved_model.pth'
@@ -36,13 +33,9 @@ def predict_sentence(input_line):
 
 @app.route('/predict/<string:sentence>')
 def predict(sentence):
-    #if request.method == 'POST':
-        # Convert %22 to " and &20 to space
-
-
     # Predict language class
     sentence, language = predict_sentence(sentence)
     return jsonify({'language': language})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

@@ -1,4 +1,5 @@
-from train_rnn import config, RNN, Utils
+from RNN import RNN
+from Utils import Utils
 import pickle
 import torch
 import numpy as np
@@ -19,7 +20,7 @@ Word2Index_w_unk = Word2Index.copy()
 Word2Index_w_unk['<UNK>'] = 0
 
 n_words = len(Word2Index)
-rnn = RNN(len(Word2Index), config['n_hidden'], 3)
+rnn = RNN(len(Word2Index), 256, 3)
 rnn.load_state_dict(torch.load(saved_model_dir))
 all_categories = ['da', 'no', 'sv']
 
