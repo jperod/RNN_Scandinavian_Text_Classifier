@@ -16,9 +16,9 @@ These instructions will get you a copy of the project up and running on your loc
 ### Extracting the compressed dataset
 
 The data has to be downloaded and extracted from the following links: 
-* os_da.txt (danish) - http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/da-en.txt.zip
-* os_no.txt (norwegian) - http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/en-no.txt.zip
-* os_sv.txt (swedish)- http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/en-sv.txt.zip
+* OpenSubtitles.da-en.da (danish) - http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/da-en.txt.zip
+* OpenSubtitles.en-no.no (norwegian) - http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/en-no.txt.zip
+* OpenSubtitles.en-sv.sv (swedish)- http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/en-sv.txt.zip
 
 Each .zip file contains multiple files, make sure to extract only the file ending in the respective language:
 * From da-en.txt.zip extract only the file: OpenSubtitles.da-en.da
