@@ -136,6 +136,11 @@ Output in json format:
 ```
 {"language":"sv"}
 ```
+## Future Work 
+
+* Implement learning rate decay to further prevent vanishing/exploding gradients
+* extract more scandivanian datasets and train on more sentences
+* create a web app to integrate the REST API and host it (ex: heroku web app)
 
 ## Authors
 
