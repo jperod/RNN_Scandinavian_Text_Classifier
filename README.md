@@ -4,7 +4,7 @@ Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegi
 * Trained on a translated subtitles dataset downloaded from: http://opus.nlpl.eu/OpenSubtitles.php
 * Trained on sentences between 15 and 100 characters
 * Best saved model achieves ~90% accuracy on validation data after ~5 training epochs.
-* Implemented exponential learning rate decay to prevent vanishing/exploding gradients, a common problem in the training of RNNs.
+* Implemented with low but not too low learning rate of 0.005 to prevent vanishing/exploding gradients, a common problem in the training of RNNs.
 * Developed with PyTorch.
 * Integrated on a REST API service.
 * Dockerized using docker.
@@ -15,10 +15,11 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Extracting the compressed dataset
 
-The data has already been downloaded from http://opus.nlpl.eu/OpenSubtitles.php and compressed. Extract OpenSubs.rar in /datasets and a folder is extracted with the following files: 
-* os_da.txt (danish) 
-* os_no.txt (norwegian) 
-* os_sv.txt (swedish)
+
+The data has to be downloaded and extracted from the following links: 
+* os_da.txt (danish) - opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/da-en.txt.zip
+* os_no.txt (norwegian) - opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/no-en.txt.zip
+* os_sv.txt (swedish)- opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/sv-en.txt.zip
 
 ### Installation
 
@@ -58,7 +59,6 @@ python train_rnn.py
 To train on different configuration you can modify the following optional arguments:
 * --nh (number of hidden units, default=256)
 * --lr (learning rate, default=0.005)
-* --lr_d (exponential learning rate decay percentage, default=0.99)
 * --e (number of epochs, default=5)
 * --pe (print every n iterations, default=1000)
 * --ds (dataset size of data to extract, default=100000 sentences)
