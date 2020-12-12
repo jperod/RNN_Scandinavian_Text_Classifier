@@ -2,7 +2,7 @@
 
 Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegian and Swedish:
 * Trained on a translated subtitles dataset downloaded from: http://opus.nlpl.eu/OpenSubtitles.php
-* Achieves ~90% accuracy on validation data after ~5 training epochs.
+* Achieves 90.2% accuracy on validation data after ~5 training epochs.
 * Implemented exponential learning rate decay to prevent vanishing/exploding gradients during training.
 * Developed with PyTorch.
 * Integrated on a REST API service.
@@ -10,33 +10,70 @@ Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegi
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
-### Prerequisites
+### Extracting the data
 
-What things you need to install the software and how to install them
+The data has already been downloaded from http://opus.nlpl.eu/OpenSubtitles.php and compressed. Extract datasets/OpenSubs.rar and a folder is extracted with the following files: os_da.txt (danish), os_no.txt (norwegian) and sv.txt (swedish).
 
+### Installation
+
+1. Clone this repository
 ```
-Give examples
+git clone https://github.com/jperod/RNN_Scandinavian_Text_Classifier.git
+```
+2. install virtualenv 
+```
+pip install virtualenv
+```
+3. Create a python virtualenv
+```
+virtualenv venv
+```
+4.i (Windows) Activate virtual environment
+```
+cd venv\Scripts
+activate
+cd ..\..
+```
+4.ii (Linux / Mac) Activate virtual environment
+```
+source venv/bin/activate
+```
+5 Install required libraries
+```
+pip install -r requirements.txt
 ```
 
-### Installing
+### Training the model
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+To train using the same configuration as mine
 ```
-Give the example
+python train_rnn.py
+```
+To train on different configuration you can modify the following optional arguments:
+* --nh (number of hidden units, default=256)
+* --lr (learning rate, default=0.005)
+* --lr_d (exponential learning rate decay percentage, default=0.99)
+* --e (number of epochs, default=5)
+* --pe (print every n iterations, default=1000)
+* --ds (dataset size of data to extract, default=100000 sentences)
+* --dir (directory of OpenSubtitles data, default='datasets/OpenSubs')
+* --ckp (bool, use if training from checkpoint, default=False)
+* --ckp_dir (if --ckp, directory of saved model, default='save_hn_256_lr_0.005')
+
+Example:
+```
+python train_rnn.py --nh 128 --lr 0.001 --e 2 --ckp --ckp_dir 'save_hn_128_lr_0.001'
 ```
 
-And repeat
+(running train_rnn.py will automatically create a save checkpoint directory in /saves if --ckp is used then --ckp_dir will be used to load model. To train model from 0, it is recommended to backup the saved model and delete 'save_hn_XXX_lr_XXXX' file so that a new one can be generated.)
 
+Example of the output during training:
 ```
 until finished
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
 
 ## REST API
 
@@ -60,25 +97,6 @@ Explain what these tests test and why
 ```
 Give an example
 ```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
 ## Authors
 
 * **Pedro Rodrigues** (https://github.com/jperod)
@@ -86,6 +104,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
 ## Acknowledgments
 
 * Hat tip to anyone whose code was used
