@@ -22,7 +22,7 @@ Word2Index_w_unk['<UNK>'] = 0
 n_words = len(Word2Index)
 rnn = RNN(len(Word2Index), 256, 3)
 rnn.load_state_dict(torch.load(saved_model_dir))
-all_categories = ['da', 'no', 'sv']
+all_categories = ['sv', 'da', 'no']
 
 U = Utils(n_words, all_categories, Word2Index_w_unk)
 

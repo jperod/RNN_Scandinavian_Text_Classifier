@@ -24,11 +24,13 @@ class Utils():
         self.n_categories = 3
 
     def findFiles(self, data_dir):
-        return glob.glob(data_dir)
+        list_files = os.listdir(os.path.dirname(os.path.realpath(__file__))+"/"+data_dir)
+        list_files = [f for f in list_files if f[0:13] == "OpenSubtitles"]
+        return list_files
 
     # Read a file and split into lines
     def readLines(self, filename, lim):
-        f = open(filename, "r", encoding='utf-8')
+        f = open(os.path.dirname(os.path.realpath(__file__))+"/"+filename, "r", encoding='utf-8')
         c = 0
         sentences = []
         while True:
@@ -82,13 +84,13 @@ class Utils():
         category_lines = {}
 
         for filename in files:
-            category = os.path.basename(filename)[3:5]
+            category = os.path.basename(filename)[-2:]
             self.all_categories.append(category)
-            sentences = self.readLines(filename, int(data_size / 3))
+            sentences = self.readLines(data_dir+"/"+ filename, int(data_size / 3))
             category_lines[category] = sentences
             self.all_sentences.extend(sentences)
             self.all_labels.extend([category for i in range(len(sentences))])
-
+        print(self.all_categories)
         df = pd.DataFrame([self.all_sentences, self.all_labels]).T
 
         df_train, df_val = train_test_split(df, shuffle=True, test_size=min(0.15, 10000 / len(self.all_sentences)))
@@ -137,7 +139,7 @@ class Utils():
 
         return output, rnn
 
-    def train(self, category_tensor, line_tensor, iter, rnn):
+    def train(self, category_tensor, line_tensor, iter, rnn, lr):
         hidden = rnn.initHidden()
 
         rnn.zero_grad()
@@ -147,10 +149,6 @@ class Utils():
         criterion = nn.NLLLoss()
         loss = criterion(output, category_tensor)
         loss.backward()
-
-        # Add parameters' gradients to their values, multiplied by learning rate with exponential decay
-        # reduce 0.8 every 10k steps
-        lr = config["learning_rate"] * pow(config["lr_decay"], (iter / 10000))
 
         for p in rnn.parameters():
             p.data.add_(p.grad.data, alpha=-lr)
