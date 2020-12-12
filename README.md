@@ -75,7 +75,7 @@ FALTA METER ISTO
 ```
 ### Using trained model to generate predictions
 
-To see an example of the model predicting multiple random sentenced
+To see an example of the model predicting multiple random sentences
 ```
 python predict_rnn.py --example
 ```
@@ -83,28 +83,36 @@ To predict a custom sentence string
 ```
 python predict_rnn.py --string 'Der er i øjeblikket ingen tekst på denne side.'
 ```
-## REST API
 
-### REST API Response:
+## REST API on Docker
+
+### Dockerizing the Flask app service with Docker
+
+Building the container
 ```
-{"class_id": 1, "class_name": "Danish"}
+docker build -t stc .
+```
+After the build completes, run the container
+```
+docker run -d -p 5000:5000 stc
 ```
 
-### Break down into end to end tests
+### To run the REST API on the built container
 
-Explain what these tests test and why
 
+To serve a prediction using REST API do:
 ```
-Give an example
+http://http://0.0.0.0:5000/predict/<sentence>
+```
+Example:
+```
+http://http://0.0.0.0:5000/predict/När katten är borta dansar råttorna på bordet
+```
+Output in json format:
+```
+{"language":"sv"}
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 ## Authors
 
 * **Pedro Rodrigues** (https://github.com/jperod)
@@ -115,7 +123,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* This model is based from https://pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial.html
+* Useful Flask + Docker tutorial https://runnable.com/docker/python/dockerize-your-flask-application
 
