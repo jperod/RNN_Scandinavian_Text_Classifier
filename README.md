@@ -2,7 +2,7 @@
 
 Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegian and Swedish:
 * Trained on a translated subtitles dataset downloaded from: http://opus.nlpl.eu/OpenSubtitles.php
-* Achieves ~90% accuracy on validation data after ~5 training epochs.
+* Achieves 90.2% accuracy on validation data after ~5 training epochs.
 * Implemented exponential learning rate decay to prevent vanishing/exploding gradients during training.
 * Developed with PyTorch.
 * Integrated on a REST API service.
@@ -12,25 +12,38 @@ Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegi
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Prerequisites
+### Extracting the data
 
-What things you need to install the software and how to install them
+* The data has already been downloaded from http://opus.nlpl.eu/OpenSubtitles.php and compressed.
+* Extract datasets/OpenSubs.rar
+* A folder is extracted with the following files: os_da.txt (danish), os_no.txt (norwegian) and sv.txt (swedish).
 
+### Installing the environment
+
+* Clone this repository
 ```
-Give examples
+git clone https://github.com/jperod/RNN_Scandinavian_Text_Classifier.git
+```
+* install virtualenv 
+```
+pip install virtualenv
+```
+* Create a python virtualenv
+```
+virtualenv venv
+```
+* Activate virtual environment
+  ** Windows
+```
+cd venv\Scripts
+activate
+cd ..\..
 ```
 
-### Installing
+### Training the model
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
+* 
+* (running train_rnn.py will automatically create a save checkpoint directory in /saves if --ckp is used then --ckp_dir will be used to load model. To train model from 0, it is recommended to backup the saved model and delete 'save_hn_XXX_lr_XXXX' file so that a new one can be generated.)
 
 ```
 until finished
