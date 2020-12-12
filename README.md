@@ -18,8 +18,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 The data has to be downloaded and extracted from the following links: 
 * os_da.txt (danish) - opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/da-en.txt.zip
-* os_no.txt (norwegian) - opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/no-en.txt.zip
-* os_sv.txt (swedish)- opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/sv-en.txt.zip
+* os_no.txt (norwegian) - opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/en-no.txt.zip
+* os_sv.txt (swedish)- opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/en-sv.txt.zip
 
 ### Installation
 
