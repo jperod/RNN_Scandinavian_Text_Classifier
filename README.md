@@ -71,10 +71,18 @@ python train_rnn.py --nh 128 --lr 0.001 --e 2 --ckp --ckp_dir 'save_hn_128_lr_0.
 
 Example of the output during training:
 ```
-until finished
+FALTA METER ISTO
 ```
+### Using trained model to generate predictions
 
-
+To see an example of the model predicting multiple random sentenced
+```
+python predict_rnn.py --example
+```
+To predict a custom sentence string
+```
+python predict_rnn.py --string 'Der er i øjeblikket ingen tekst på denne side.'
+```
 ## REST API
 
 ### REST API Response:
