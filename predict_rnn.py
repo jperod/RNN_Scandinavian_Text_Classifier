@@ -1,28 +1,29 @@
-from train_rnn import config
-from train_rnn import RNN, Utils
+from train_rnn import config, RNN, Utils
 import pickle
 import torch
 import numpy as np
+import argparse
 
-save_dir = "saves/backup_save_hn_256_lr_0.005"
-vocab_dir = save_dir + "/vocab.txt"
-# saved_model_dir = save_dir + "/saved_model.pth"
-saved_model_dir = "saves/backup_save_hn_256_lr_0.005/saved_model.pth"
-with open(vocab_dir, "rb") as f:
+parser = argparse.ArgumentParser()
+parser.add_argument('--string', type=str, help='enter string to predict')
+parser.add_argument('--example', action='store_true', help='example of predictions made by the model')
+args = parser.parse_args()
+
+vocab_dir = 'saves/save_hn_256_lr_0.005/vocab.txt'
+saved_model_dir = 'saves/save_hn_256_lr_0.005/saved_model.pth'
+
+with open(vocab_dir, 'rb') as f:
     Word2Index = pickle.load(f)
+# Point unknown token to Word2Index with index 0:
 Word2Index_w_unk = Word2Index.copy()
-#Add unknown token to Word2Index:
-ix_unk = 0
-Word2Index_w_unk["<UNK>"] = ix_unk
+Word2Index_w_unk['<UNK>'] = 0
 
 n_words = len(Word2Index)
-rnn = RNN(len(Word2Index), config["n_hidden"], 3)
+rnn = RNN(len(Word2Index), config['n_hidden'], 3)
 rnn.load_state_dict(torch.load(saved_model_dir))
-all_categories = Utils().all_categories
+all_categories = ['da', 'no', 'sv']
 
-#[p for p in rnn.parameters()]
-
-def predict(input_line, n_predictions=3):
+def predict(input_line):
     print('\n> %s' % input_line)
     with torch.no_grad():
         output = Utils().evaluate(Utils().SentToTensor(input_line, n_words))
