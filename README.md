@@ -14,11 +14,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Extracting the data
 
-* The data has already been downloaded from http://opus.nlpl.eu/OpenSubtitles.php and compressed.
-* Extract datasets/OpenSubs.rar
-* A folder is extracted with the following files: os_da.txt (danish), os_no.txt (norwegian) and sv.txt (swedish).
+The data has already been downloaded from http://opus.nlpl.eu/OpenSubtitles.php and compressed. Extract datasets/OpenSubs.rar and a folder is extracted with the following files: os_da.txt (danish), os_no.txt (norwegian) and sv.txt (swedish).
 
-### Installing the environment
+### Installation
 
 * 1. Clone this repository
 ```
@@ -49,8 +47,27 @@ pip install -r requirements.txt
 
 ### Training the model
 
-* 
-* (running train_rnn.py will automatically create a save checkpoint directory in /saves if --ckp is used then --ckp_dir will be used to load model. To train model from 0, it is recommended to backup the saved model and delete 'save_hn_XXX_lr_XXXX' file so that a new one can be generated.)
+To train using the same configuration as mine
+```
+python train_rnn.py
+```
+To train on different configuration you can modify the following optional arguments:
+* --nh (number of hidden units, default=256)
+* --lr (learning rate, default=0.005)
+* --lr_d (exponential learning rate decay percentage, default=0.99)
+* --e (number of epochs, default=5)
+* --pe (print every n iterations, default=1000)
+* --ds (dataset size of data to extract, default=100000 sentences)
+* --dir (directory of OpenSubtitles data, default='datasets/OpenSubs')
+* --ckp (bool, use if training from checkpoint, default=False)
+* --ckp_dir (if --ckp, directory of saved model, default='save_hn_256_lr_0.005')
+
+Example:
+```
+python train_rnn.py --nh 128 --lr 0.001 --e 2 --ckp --ckp_dir 'save_hn_128_lr_0.001'
+```
+
+(running train_rnn.py will automatically create a save checkpoint directory in /saves if --ckp is used then --ckp_dir will be used to load model. To train model from 0, it is recommended to backup the saved model and delete 'save_hn_XXX_lr_XXXX' file so that a new one can be generated.)
 
 ```
 until finished
@@ -80,25 +97,6 @@ Explain what these tests test and why
 ```
 Give an example
 ```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
 ## Authors
 
 * **Pedro Rodrigues** (https://github.com/jperod)
@@ -106,6 +104,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
 ## Acknowledgments
 
 * Hat tip to anyone whose code was used
