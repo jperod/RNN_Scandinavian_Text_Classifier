@@ -16,15 +16,15 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 """ Configuration """
 config = {
-    "n_hidden": 32,
+    "n_hidden": 256,
     "learning_rate": 0.005, # If you set this too high, it might explode. If too low, it might not learn
-    "n_iters": 100000,
+    "n_iters": 1000000, #10 x datasize corresponding to ~10 epochs | Only the best Model (Highest Val Acc) is saved.
     "print_every": 1000,
-    "data_size": 30000, # Number of sentences to extract. balanced amounts of Da, Sv and No sentences.
-    "data_dir": "datasets/OpenSubs/*.txt",
-    "lr_decay": 0.95,
+    "data_size": 100000, # Number of sentences to extract. balanced amounts of Da, Sv and No sentences.
+    "data_dir": "datasets/OpenSubs/*.txt", #
+    "lr_decay": 0.99, #Exponential lr decay: decrease lr by 1% every 10,000 training iterations. This helps prevent vanishing/exploding gradients.
     "train_from_savedmodel": False, #If model was saved, it can be loaded to continue training from checkpoint
-    "saved_model_dir": "save_hn_256_lr_0.005"
+    "saved_model_dir": "save_hn_256_lr_0.005" #Directory of saved model
 }
 
 class Utils():
