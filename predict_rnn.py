@@ -34,15 +34,19 @@ def predict(input_line):
         prediction = all_categories[pred_ix]
         print("The following sentence is: [" + prediction + "]")
 
-print('\nTesting on dataset sentences:')
-predict('Hold nu op, hun har det skidt') #DA
-predict('Jeg har akkurat bakt en sukkerkake') #NO
-predict('Man känner igen den, den är bekväm.') #SV
+if  args.example:
+    print('\nTesting on dataset sentences:')
+    predict('Hold nu op, hun har det skidt') #DA
+    predict('Jeg har akkurat bakt en sukkerkake') #NO
+    predict('Man känner igen den, den är bekväm.') #SV
 
-print('\nTesting on random sentences from the internet:')
-predict('Mit luftpudefartøj er fyldt med ål') #DA
-predict('Der er i øjeblikket ingen tekst på denne side. Du kan søge efter sidenavnet på andre sider, søge i relaterede logger eller oprette siden. ') #DA
-predict('Jeg forstår det veldig godt.') #NO
-predict('Med et areal på 165,25 millioner kvadratkilometer dekker Stillehavet nesten en tredjedel av jordens overflate') #NO
-predict('När katten är borta dansar råttorna på bordet') #SV
-predict('Rosshavet (engelska: Ross Sea) är ett randhav av Antarktiska oceanen och ligger mellan Victoria Land och Marie Byrd Land') #SV
+    print('\nTesting on random sentences from the internet:')
+    predict('Hej, jeg hedder Pedro og jeg elsker at drikke øl!') #DA
+    predict('Mit luftpudefartøj er fyldt med ål') #DA
+    predict('Der er i øjeblikket ingen tekst på denne side. Du kan søge efter sidenavnet på andre sider, søge i relaterede logger eller oprette siden. ') #DA
+    predict('Jeg forstår det veldig godt.') #NO
+    predict('Floreanaspottefugl er ein sterkt truga art av spottefuglar. Han er naturleg endemisk til øya Floreana, ei av Galápagosøyane.')  # NO
+    predict('När katten är borta dansar råttorna på bordet') #SV
+    predict('Rosshavet (engelska: Ross Sea) är ett randhav av Antarktiska oceanen och ligger mellan Victoria Land och Marie Byrd Land') #SV
+else:
+    predict(args.string)
