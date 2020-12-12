@@ -51,7 +51,7 @@ pip install -r requirements.txt
 
 ### Training the model
 
-To train using the same configuration as mine
+To train using the same configuration as mine (default values)
 ```
 python train_rnn.py
 ```
