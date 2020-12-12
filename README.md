@@ -1,7 +1,8 @@
-# RNN_Scandinavian_Text_Classifier
+# RNN Scandinavian Text Classifier
 
 Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegian and Swedish:
 * Trained on a translated subtitles dataset downloaded from: http://opus.nlpl.eu/OpenSubtitles.php
+* Trained on sentences between 15 and 100 characters
 * Achieves 90.2% accuracy on validation data after ~5 training epochs.
 * Implemented exponential learning rate decay to prevent vanishing/exploding gradients during training.
 * Developed with PyTorch.
@@ -12,9 +13,12 @@ Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegi
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
-### Extracting the data
+### Extracting the compressed dataset
 
-The data has already been downloaded from http://opus.nlpl.eu/OpenSubtitles.php and compressed. Extract datasets/OpenSubs.rar and a folder is extracted with the following files: os_da.txt (danish), os_no.txt (norwegian) and sv.txt (swedish).
+The data has already been downloaded from http://opus.nlpl.eu/OpenSubtitles.php and compressed. Extract OpenSubs.rar in datasets/ and a folder is extracted with the following files: 
+* os_da.txt (danish) 
+* os_no.txt (norwegian) 
+* os_sv.txt (swedish)
 
 ### Installation
 
