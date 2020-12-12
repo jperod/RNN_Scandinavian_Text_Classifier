@@ -18,29 +18,29 @@ The data has already been downloaded from http://opus.nlpl.eu/OpenSubtitles.php 
 
 ### Installation
 
-* 1. Clone this repository
+1. Clone this repository
 ```
 git clone https://github.com/jperod/RNN_Scandinavian_Text_Classifier.git
 ```
-* 2. install virtualenv 
+2. install virtualenv 
 ```
 pip install virtualenv
 ```
-* 3. Create a python virtualenv
+3. Create a python virtualenv
 ```
 virtualenv venv
 ```
-* 4.i (Windows) Activate virtual environment
+4.i (Windows) Activate virtual environment
 ```
 cd venv\Scripts
 activate
 cd ..\..
 ```
-* 4.ii (Linux / Mac) Activate virtual environment
+4.ii (Linux / Mac) Activate virtual environment
 ```
 source venv/bin/activate
 ```
-* 5 Install required libraries
+5 Install required libraries
 ```
 pip install -r requirements.txt
 ```
@@ -69,11 +69,11 @@ python train_rnn.py --nh 128 --lr 0.001 --e 2 --ckp --ckp_dir 'save_hn_128_lr_0.
 
 (running train_rnn.py will automatically create a save checkpoint directory in /saves if --ckp is used then --ckp_dir will be used to load model. To train model from 0, it is recommended to backup the saved model and delete 'save_hn_XXX_lr_XXXX' file so that a new one can be generated.)
 
+Example of the output during training:
 ```
 until finished
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
 
 ## REST API
 
