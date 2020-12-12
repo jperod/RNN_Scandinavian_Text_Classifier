@@ -1,11 +1,11 @@
 # RNN_Scandinavian_Text_Classifier
- 
- 
 
-
-# Project Title
-
-One Paragraph of project description goes here
+Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegian and Swedish:
+* Trained on a translated subtitles dataset downloaded from: http://opus.nlpl.eu/OpenSubtitles.php
+* Achieves ~90% accuracy on validation data after ~5 training epochs.
+* Developed with PyTorch.
+* Integrated on a REST API service.
+* Dockerized using docker.
 
 ## Getting Started
 
@@ -80,9 +80,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Pedro Rodrigues** (https://github.com/jperod)
 
 ## License
 
