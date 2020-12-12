@@ -82,17 +82,20 @@ class Utils():
         files = self.findFiles(data_dir=data_dir)
         # Build the category_lines dictionary, a list of names per language
         category_lines = {}
+        self.all_categories = ['da', 'no', 'sv']
 
-        for filename in files:
-            category = os.path.basename(filename)[-2:]
-            self.all_categories.append(category)
-            sentences = self.readLines(data_dir+"/"+ filename, int(data_size / 3))
-            category_lines[category] = sentences
-            self.all_sentences.extend(sentences)
-            self.all_labels.extend([category for i in range(len(sentences))])
+        sentences_da = self.readLines(data_dir+"/OpenSubtitles.da-en.da", int(data_size / 3))
+        self.all_sentences.extend(sentences_da)
+        self.all_labels.extend(["da" for i in range(len(sentences_da))])
+        sentences_no = self.readLines(data_dir+"/OpenSubtitles.en-no.no", int(data_size / 3))
+        self.all_sentences.extend(sentences_no)
+        self.all_labels.extend(["no" for i in range(len(sentences_no))])
+        sentences_sv = self.readLines(data_dir+"/OpenSubtitles.en-sv.sv", int(data_size / 3))
+        self.all_sentences.extend(sentences_sv)
+        self.all_labels.extend(["sv" for i in range(len(sentences_sv))])
         print(self.all_categories)
-        df = pd.DataFrame([self.all_sentences, self.all_labels]).T
 
+        df = pd.DataFrame([self.all_sentences, self.all_labels]).T
         df_train, df_val = train_test_split(df, shuffle=True, test_size=min(0.15, 10000 / len(self.all_sentences)))
 
         # Max val size of 10000. Don't need more really for validation purposes
