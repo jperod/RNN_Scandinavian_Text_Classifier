@@ -3,7 +3,7 @@
 Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegian and Swedish:
 * Trained on a translated subtitles dataset downloaded from: http://opus.nlpl.eu/OpenSubtitles.php
 * Trained on sentences between 15 and 100 characters
-* Best saved model achieves ~90% accuracy on validation data after ~5 training epochs.
+* Best saved model achieved 90% accuracy on validation data after ~5 training epochs.
 * Implemented with low but not too low learning rate of 0.005 to prevent vanishing/exploding gradients, a common problem in the training of RNNs.
 * Developed with PyTorch.
 * Integrated on a REST API service.
@@ -66,7 +66,7 @@ To train on different configuration you can modify the following optional argume
 * --nh (number of hidden units, default=256)
 * --lr (learning rate, default=0.005)
 * --e (number of epochs, default=5)
-* --pe (print every n iterations, default=1000)
+* --pe (print every n iterations, default=100)
 * --ds (dataset size of data to extract, default=100000 sentences)
 * --dir (directory of OpenSubtitles data, default='datasets/OpenSubs')
 * --ckp (bool, use if training from checkpoint, default=False)
@@ -79,11 +79,22 @@ python train_rnn.py --nh 128 --lr 0.001 --e 2 --ckp --ckp_dir 'save_hn_128_lr_0.
 
 (running train_rnn.py will automatically create a save checkpoint directory in /saves if --ckp is used then --ckp_dir will be used to load model. To train model from 0, it is recommended to backup the saved model and delete 'save_hn_XXX_lr_XXXX' file so that a new one can be generated.)
 
-Example of the output during training:
+Example of the output during training (using --pe=10 and --ckp):
 ```
-XXXXX X% (35m 48s) | Står du der, jenta mi? / da ✗ (no)
-Train Accuracy: 55.1% | Validation Accuracy: 54.9%
-
+860 0% (4m 20s) | Nej, vet du vad? / sv ✓
+Train Accuracy: 87.6% | Validation Accuracy: 88.4%
+870 0% (4m 24s) | Mr. Townsend, du kan da være mer rundhåndet enn det. / no ✓
+Train Accuracy: 87.7% | Validation Accuracy: 88.3%
+880 0% (4m 25s) | Kommer hun her ikke? / da ✓
+Train Accuracy: 87.6% | Validation Accuracy: 88.3%
+890 0% (4m 28s) | - Jeg så jer sammen. / da ✓
+Train Accuracy: 87.5% | Validation Accuracy: 88.2%
+900 0% (4m 30s) | Eller vad sa Runeberg, vår nationalskald? / sv ✓
+Train Accuracy: 87.7% | Validation Accuracy: 88.2%
+910 0% (4m 33s) | Han må være slangemenneske. / no ✗ (da)
+Train Accuracy: 87.7% | Validation Accuracy: 88.1%
+920 0% (4m 36s) | -Det fins ingen miss Froy. / no ✓
+Train Accuracy: 87.7% | Validation Accuracy: 88.2%
 
 ```
 ### Using trained model to generate predictions
