@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--string', type=str, help='enter string to predict')
 parser.add_argument('--example', action='store_true', help='example of predictions made by the model')
 args = parser.parse_args()
-
+#
 vocab_dir = 'saves/save_hn_256_lr_0.005/vocab.txt'
 saved_model_dir = 'saves/save_hn_256_lr_0.005/saved_model.pth'
 
