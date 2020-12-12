@@ -15,7 +15,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Extracting the compressed dataset
 
-The data has already been downloaded from http://opus.nlpl.eu/OpenSubtitles.php and compressed. Extract OpenSubs.rar in datasets/ and a folder is extracted with the following files: 
+The data has already been downloaded from http://opus.nlpl.eu/OpenSubtitles.php and compressed. Extract OpenSubs.rar in /datasets and a folder is extracted with the following files: 
 * os_da.txt (danish) 
 * os_no.txt (norwegian) 
 * os_sv.txt (swedish)
