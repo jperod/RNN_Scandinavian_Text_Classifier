@@ -169,7 +169,6 @@ class Utils():
 
         return output, rnn
 
-
     def tokenizer(self, sent):
         tokens = rTokenizer.tokenize(sent)
         tokens = [token.lower() for token in tokens]

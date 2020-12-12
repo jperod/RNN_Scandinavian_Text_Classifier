@@ -1,35 +1,8 @@
 from train_rnn import config
-from train_rnn import RNN, tokenizer
+from train_rnn import RNN, Utils
 import pickle
 import torch
 import numpy as np
-
-""" remover daqui!!!!!!"""
-def SentToTensor(sent, n_words):
-    # Remove punctuation in this tokenizer, words only
-    sent = tokenizer(sent)
-    sent = [word.lower() for word in sent]
-    # sent = [word for word in sent if word in ]
-    tensor = torch.zeros(len(sent), 1, n_words)
-    for li, word in enumerate(sent):
-        tensor[li][0][WordToIndex(word)] = 1
-    return tensor
-
-def WordToIndex(word):
-    try:
-        index = Word2Index[word.lower()]
-    except:
-        index = Word2Index_w_unk["<UNK>"]
-    return index
-
-def evaluate(line_tensor):
-    hidden = rnn.initHidden()
-
-    for i in range(line_tensor.size()[0]):
-        output, hidden = rnn(line_tensor[i], hidden)
-
-    return output
-""" remover daqui!!!!!!"""
 
 save_dir = "saves/backup_save_hn_256_lr_0.005"
 vocab_dir = save_dir + "/vocab.txt"
