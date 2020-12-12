@@ -34,14 +34,15 @@ def predict_sentence(input_line):
         print("The following sentence is: [" + prediction + "]")
     return input_line, prediction
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    if request.method == 'POST':
-        # we will get the file from the request
-        sentence = request.files['sentence']
-        # Predict language class
-        sentence, language = predict_sentence(sentence)
-        return jsonify({'sentence': sentence, 'language': language})
+@app.route('/predict/<string:sentence>')
+def predict(sentence):
+    #if request.method == 'POST':
+        # Convert %22 to " and &20 to space
+
+
+    # Predict language class
+    sentence, language = predict_sentence(sentence)
+    return jsonify({'language': language})
 
 if __name__ == '__main__':
     app.run()
