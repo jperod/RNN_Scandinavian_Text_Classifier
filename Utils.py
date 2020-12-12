@@ -142,7 +142,7 @@ class Utils():
 
         return output, rnn
 
-    def train(self, category_tensor, line_tensor, iter, rnn, lr):
+    def train(self, category_tensor, line_tensor, iter, rnn, lr, lr_decay):
         hidden = rnn.initHidden()
 
         rnn.zero_grad()
@@ -153,8 +153,11 @@ class Utils():
         loss = criterion(output, category_tensor)
         loss.backward()
 
+        #Learning rate decay
+        lr_w_decay = lr*pow(lr_decay, iter/10000)
+
         for p in rnn.parameters():
-            p.data.add_(p.grad.data, alpha=-lr)
+            p.data.add_(p.grad.data, alpha=-lr_w_decay)
 
         return output, rnn
 

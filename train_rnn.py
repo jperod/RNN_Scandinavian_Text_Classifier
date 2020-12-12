@@ -13,6 +13,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--nh', type=int, help='number of hidden units', default=256)
 parser.add_argument('--lr', type=int, help='learning rate', default=0.005)
+parser.add_argument('--lr_d', type=int, help='learning rate decay rate', default=0.97)
 parser.add_argument('--e', type=int, help='number of epochs', default=5)
 parser.add_argument('--pe', type=int, help='print every n iterations', default=100)
 parser.add_argument('--ds', type=int, help='size of data to extract', default=100000)
@@ -25,6 +26,7 @@ args = parser.parse_args()
 config = {
     "n_hidden": args.nh,
     "learning_rate": args.lr, # If you set this too high, it might explode. If too low, it might not learn
+    "learning_rate_decay": args.lr_d,  # percentage to decrease lr by every 10k iterations, default = 0.97 to decay 3% every 10k
     "n_iters": args.ds*args.e, #~number of iterations = epoch number * datasize
     "print_every": args.pe,
     "data_size": args.ds, # Number of sentences to extract. balanced amounts of Da, Sv and No sentences.
@@ -60,7 +62,7 @@ def main():
 
     for iter in range( config["n_iters"]):
         category, line, category_tensor, line_tensor = U.randomTrainingExample(df_train)
-        output, rnn = U.train(category_tensor, line_tensor, iter, rnn, config['learning_rate'])
+        output, rnn = U.train(category_tensor, line_tensor, iter, rnn, config['learning_rate'], config['learning_rate_decay'])
         guess, _ = U.categoryFromOutput(output)
         if guess == category:
             train_scores_right.append(1)
