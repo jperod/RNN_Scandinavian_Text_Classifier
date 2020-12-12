@@ -13,7 +13,7 @@ Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegi
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
-### Extracting the compressed dataset
+### Extracting the dataset
 
 The data has to be downloaded and extracted from the following links: 
 * OpenSubtitles.da-en.da (danish) - http://opus.nlpl.eu/download.php?f=OpenSubtitles/v2018/moses/da-en.txt.zip
