@@ -4,7 +4,7 @@ Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegi
 * Trained on a translated subtitles dataset downloaded from: http://opus.nlpl.eu/OpenSubtitles.php
 * Trained on sentences between 15 and 100 characters
 * Best model saved when model achieved 90.5% accuracy on validation data after 5 training epochs.
-* Implemented with exponential learning rate decay with an initial rate of 0.005 to prevent vanishing/exploding gradients, a common problem in the training of RNNs.
+* Implemented with exponential learning rate decay to prevent vanishing/exploding gradients, a common problem in the training of RNNs.
 * Developed with PyTorch.
 * Integrated on a REST API service.
 * Dockerized using docker.
@@ -99,7 +99,7 @@ Train Accuracy: 87.7% | Validation Accuracy: 88.2%
 ```
 ### Using trained model to generate predictions
 
-#### To see an example of the model predicting multiple random sentences
+To see an example of the model predicting multiple random sentences
 ```
 python predict_rnn.py --example
 ```
@@ -139,7 +139,7 @@ The following sentence is: [sv]
 > Rosshavet (engelska: Ross Sea) är ett randhav av Antarktiska oceanen och ligger mellan Victoria Land och Marie Byrd Land
 The following sentence is: [sv]
 ```
-#### To predict a custom sentence string
+To predict a custom sentence string
 ```
 python predict_rnn.py --string 'Der er i øjeblikket ingen tekst på denne side.'
 ```
@@ -162,7 +162,6 @@ docker run -d -p 5000:5000 stc
 ```
 
 ### To run the REST API on the built container
-
 
 To serve a prediction using REST API do:
 ```
