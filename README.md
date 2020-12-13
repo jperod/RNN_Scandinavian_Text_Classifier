@@ -6,7 +6,7 @@ Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegi
 * Best model saved when model achieved 90.5% accuracy on validation data after 5 training epochs.
 * Implemented with exponential learning rate decay to prevent vanishing/exploding gradients, a common problem in the training of RNNs.
 * Developed with PyTorch.
-* Integrated on a REST API service.
+* Integrated on a REST API service through Flask.
 * Dockerized using docker.
 
 ## Getting Started
