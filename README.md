@@ -178,6 +178,7 @@ Output in json format:
 # Future Work 
 
 * extract more scandivanian datasets and train on more sentences.
+* implement maximum limit on number of tokens to allow higher datasets without increasing vocav dict and tensor size
 * create a web app to integrate the REST API and host it (ex: heroku web app).
 * build same model using transformers and compare
 
