@@ -65,7 +65,7 @@ python train_rnn.py
 To train on different configuration you can modify the following optional arguments:
 * --nh (number of hidden units, default=256)
 * --lr (learning rate, default=0.005)
-* --lr_d (learning rate decay percentage to multiply every 10k iterations, default=0.99)
+* --lr_d (learning rate decay percentage to decrease every 10k iterations, default=0.97)
 * --e (number of epochs, default=5)
 * --pe (print every n iterations, default=100)
 * --ds (dataset size of data to extract, default=100000 sentences)
