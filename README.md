@@ -4,7 +4,7 @@ Simple RNN short sentence classifier for scandinavian languages: Danish, Norwegi
 * Trained on a translated subtitles dataset downloaded from: http://opus.nlpl.eu/OpenSubtitles.php
 * Trained on sentences between 15 and 100 characters
 * Best model saved when model achieved 90.5% accuracy on validation data after 5 training epochs.
-* Implemented with low but not too low learning rate of 0.005 to prevent vanishing/exploding gradients, a common problem in the training of RNNs.
+* Implemented with exponential learning rate decay with an initial rate of 0.005 to prevent vanishing/exploding gradients, a common problem in the training of RNNs.
 * Developed with PyTorch.
 * Integrated on a REST API service.
 * Dockerized using docker.
@@ -65,6 +65,7 @@ python train_rnn.py
 To train on different configuration you can modify the following optional arguments:
 * --nh (number of hidden units, default=256)
 * --lr (learning rate, default=0.005)
+* --lr_d (learning rate decay percentage to multiply every 10k iterations, default=0.99)
 * --e (number of epochs, default=5)
 * --pe (print every n iterations, default=100)
 * --ds (dataset size of data to extract, default=100000 sentences)
