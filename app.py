@@ -5,15 +5,17 @@ import torch
 import numpy as np
 import os
 app = Flask(__name__)
+
+"""
+Load saved model
+"""
 vocab_dir = 'saves/save_hn_256_lr_0.005/vocab.txt'
 saved_model_dir = 'saves/save_hn_256_lr_0.005/saved_model.pth'
-
 with open(vocab_dir, 'rb') as f:
     Word2Index = pickle.load(f)
 # Point unknown token to Word2Index with index 0:
 Word2Index_w_unk = Word2Index.copy()
 Word2Index_w_unk['<UNK>'] = 0
-
 n_words = len(Word2Index)
 rnn = RNN(len(Word2Index), config['n_hidden'], 3)
 rnn.load_state_dict(torch.load(saved_model_dir))
@@ -21,6 +23,9 @@ all_categories = ['da', 'no', 'sv']
 
 U = Utils(n_words, all_categories, Word2Index_w_unk)
 
+"""
+predict given sentence and output prediction
+"""
 def predict_sentence(input_line):
     print('\n> %s' % input_line)
     with torch.no_grad():
@@ -30,6 +35,10 @@ def predict_sentence(input_line):
         prediction = all_categories[pred_ix]
         print("The following sentence is: [" + prediction + "]")
     return prediction
+
+"""
+REST API routes
+"""
 @app.route('/')
 def index():
     return 'Hi! to classify a sentence write in http://0.0.0.0:5000/predict/sentence to predict'

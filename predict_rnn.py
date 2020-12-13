@@ -8,17 +8,19 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--string', type=str, help='enter string to predict')
 parser.add_argument('--example', action='store_true', help='example of predictions made by the model')
+parser.add_argument('--save_dir', type=str, help='directory fo saved model', default='saves/save_hn_256_lr_0.005/')
 args = parser.parse_args()
-#
-vocab_dir = 'saves/save_hn_256_lr_0.005/vocab.txt'
-saved_model_dir = 'saves/save_hn_256_lr_0.005/saved_model.pth'
 
+"""
+Load saved model
+"""
+vocab_dir = args.save_dir + 'vocab.txt'
+saved_model_dir = args.save_dir + 'saved_model.pth'
 with open(vocab_dir, 'rb') as f:
     Word2Index = pickle.load(f)
-# Point unknown token to Word2Index with index 0:
+# Point unknown tokens to Word2Index with index 0 corresponding to the rarely used token '0':
 Word2Index_w_unk = Word2Index.copy()
 Word2Index_w_unk['<UNK>'] = 0
-
 n_words = len(Word2Index)
 rnn = RNN(len(Word2Index), 256, 3)
 rnn.load_state_dict(torch.load(saved_model_dir))
@@ -26,6 +28,9 @@ all_categories = ['da', 'no', 'sv']
 
 U = Utils(n_words, all_categories, Word2Index_w_unk)
 
+"""
+Predict a given input sentence
+"""
 def predict(input_line):
     print('\n> %s' % input_line)
     with torch.no_grad():
@@ -35,6 +40,9 @@ def predict(input_line):
         prediction = all_categories[pred_ix]
         print("The following sentence is: [" + prediction + "]")
 
+"""
+Predict multiple example sentences
+"""
 if  args.example:
     print('\nTesting on dataset sentences:')
     predict('Hold nu op, hun har det skidt') #DA

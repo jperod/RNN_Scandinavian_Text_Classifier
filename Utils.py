@@ -1,6 +1,5 @@
 from __future__ import unicode_literals, print_function, division
 from io import open
-import glob
 import os
 from nltk.tokenize import RegexpTokenizer
 rTokenizer = RegexpTokenizer(r'\w+')
@@ -13,6 +12,9 @@ import torch
 import random
 from sklearn.feature_extraction.text import CountVectorizer
 
+"""
+Class with the main functions used to develop the training configuration of the RNN
+"""
 class Utils():
     def __init__(self, n_words=None, all_categories=[], Word2Index=None):
         # super(Utils, self).__init__()
@@ -23,12 +25,17 @@ class Utils():
         self.Word2Index = Word2Index
         self.n_categories = 3
 
+    """
+    Generate list of OpenSubtitles files in directory
+    """
     def findFiles(self, data_dir):
         list_files = os.listdir(os.path.dirname(os.path.realpath(__file__))+"/"+data_dir)
         list_files = [f for f in list_files if f[0:13] == "OpenSubtitles"]
         return list_files
 
-    # Read a file and split into lines
+    """
+    Read an input file with sentences and return the top lim sentences from 15 to 100 characters
+    """
     def readLines(self, filename, lim):
         f = open(os.path.dirname(os.path.realpath(__file__))+"/"+filename, "r", encoding='utf-8')
         c = 0
@@ -45,7 +52,9 @@ class Utils():
         f.close()
         return sentences
 
-    # Find letter index from all_letters, e.g. "a" = 0
+    """ 
+    Encode word string to corresponding index, if unknown word it is routed to the token index <UNK> which is 0 
+    """
     def WordToIndex(self, word):
         try:
             index = self.Word2Index[word.lower()]
@@ -53,14 +62,17 @@ class Utils():
             index = self.Word2Index['<UNK>']
         return index
 
-
-    # Just for demonstration, turn a letter into a <1 x n_letters> Tensor
+    """
+    Convert word string to pytorch tensor
+    """
     def WordToTensor(self, word):
         tensor = torch.zeros(1, self.n_words)
         tensor[0][self.WordToIndex(word)] = 1
         return tensor
 
-    # or an array of one-hot letter vectors
+    """
+    Tokenize and encode sentence into pytorch tensor
+    """
     def SentToTensor(self, sent):
         # Remove punctuation in this tokenizer, words only
         sent = self.tokenizer(sent)
@@ -71,11 +83,18 @@ class Utils():
             tensor[li][0][self.WordToIndex(word)] = 1
         return tensor
 
+    """
+    Used to get category from output prediction tensor
+    """
     def categoryFromOutput(self, output):
         top_n, top_i = output.topk(1)
         category_i = top_i[0].item()
         return self.all_categories[category_i], category_i
 
+    """
+    Funcion to load data from datasets/OpenSubs files and split it into training and validation. It also creates the 
+    vocabulary file using a CountVectorizer
+    """
     def load_data(self, data_size, data_dir):
         self.data_size = data_size
         self.data_dir = data_dir
@@ -109,16 +128,17 @@ class Utils():
         self.n_words = len(self.Word2Index)
         self.n_categories = len(self.all_categories)
 
+        #example
         print(self.WordToTensor('stora').size())
 
+        #example
         print(self.SentToTensor('jeg vil vite hva, som skjer med deg.').size())
 
-        print("done")
         return self.n_words, self.n_categories, self.Word2Index, df_train, df_val
 
-    def randomChoice(self, l):
-        return l[random.randint(0, len(l) - 1)]
-
+    """
+    Get random sentence from dataframe. df can be training or validation df. Used to sample training/validation data
+    """
     def randomTrainingExample(self, df):
         sample = df.sample()
         category = sample[1].values[0]
@@ -127,6 +147,9 @@ class Utils():
         line_tensor = self.SentToTensor(sent)
         return category, sent, category_tensor, line_tensor
 
+    """
+    Measure time since beginning of training
+    """
     def timeSince(self, since):
         now = time.time()
         s = now - since
@@ -134,6 +157,9 @@ class Utils():
         s -= m * 60
         return '%dm %ds' % (m, s)
 
+    """
+    Evaluate a sentence using a trained rnn model
+    """
     def evaluate(self, line_tensor, rnn):
         hidden = rnn.initHidden()
 
@@ -142,6 +168,9 @@ class Utils():
 
         return output, rnn
 
+    """
+    Main training function. lr decay implemented
+    """
     def train(self, category_tensor, line_tensor, iter, rnn, lr, lr_decay):
         hidden = rnn.initHidden()
 
@@ -161,6 +190,9 @@ class Utils():
 
         return output, rnn
 
+    """
+    Tokenizer function
+    """
     def tokenizer(self, sent):
         tokens = rTokenizer.tokenize(sent)
         tokens = [token.lower() for token in tokens]
