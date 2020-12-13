@@ -99,7 +99,7 @@ Train Accuracy: 87.7% | Validation Accuracy: 88.2%
 ```
 ### Using trained model to generate predictions
 
-To see an example of the model predicting multiple random sentences
+To see an example of the model predicting multiple random sentences.
 ```
 python predict_rnn.py --example
 ```
