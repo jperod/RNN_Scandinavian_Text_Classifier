@@ -99,15 +99,55 @@ Train Accuracy: 87.7% | Validation Accuracy: 88.2%
 ```
 ### Using trained model to generate predictions
 
-To see an example of the model predicting multiple random sentences
+#### To see an example of the model predicting multiple random sentences
 ```
 python predict_rnn.py --example
 ```
-To predict a custom sentence string
+output
+```
+Testing on dataset sentences:
+
+> Hold nu op, hun har det skidt
+The following sentence is: [da]
+
+> Jeg har akkurat bakt en sukkerkake
+The following sentence is: [no]
+
+> Man känner igen den, den är bekväm.
+The following sentence is: [sv]
+
+Testing on random sentences from the internet:
+
+> Hej, jeg hedder Pedro og jeg elsker at drikke øl!
+The following sentence is: [da]
+
+> Mit luftpudefartøj er fyldt med ål
+The following sentence is: [da]
+
+> Der er i øjeblikket ingen tekst på denne side. Du kan søge efter sidenavnet på andre sider, søge i relaterede logger eller oprette siden. 
+The following sentence is: [da]
+
+> Jeg forstår det veldig godt.
+The following sentence is: [no]
+
+> Floreanaspottefugl er ein sterkt truga art av spottefuglar. Han er naturleg endemisk til øya Floreana, ei av Galápagosøyane.
+The following sentence is: [no]
+
+> När katten är borta dansar råttorna på bordet
+The following sentence is: [sv]
+
+> Rosshavet (engelska: Ross Sea) är ett randhav av Antarktiska oceanen och ligger mellan Victoria Land och Marie Byrd Land
+The following sentence is: [sv]
+```
+#### To predict a custom sentence string
 ```
 python predict_rnn.py --string 'Der er i øjeblikket ingen tekst på denne side.'
 ```
-
+output
+```
+> Der er i øjeblikket ingen tekst på denne side.
+The following sentence is: [da]
+```
 ## REST API on Docker
 
 ### Dockerizing the Flask app service with Docker
